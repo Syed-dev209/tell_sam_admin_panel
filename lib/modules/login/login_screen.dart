@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 PrimaryButton(
                   loading: buttonLoading,
                   onTap: () => login(),
-                  title: 'Login',
+                  title: 'LOGIN',
                   width: size.width * 0.3,
                 )
               ],
