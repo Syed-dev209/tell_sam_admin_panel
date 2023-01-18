@@ -40,6 +40,7 @@ dependencies:
   dio: ^4.0.6
   flutter_feather_icons: ^2.0.0+1
   intl:
+  firebase_core: ^2.4.1
 
 dev_dependencies:
   flutter_test:
