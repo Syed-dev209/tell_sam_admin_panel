@@ -54,5 +54,25 @@
       });
     });
   </script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBFRkMWwZKHbyoRztZHBt1ra5ZFkOylaRE",
+      authDomain: "tell-sam-admin-panel.firebaseapp.com",
+      projectId: "tell-sam-admin-panel",
+      storageBucket: "tell-sam-admin-panel.appspot.com",
+      messagingSenderId: "409926758273",
+      appId: "1:409926758273:web:e01dee19caa7a85948c280"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>
 </body>
 </html>
