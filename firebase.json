@@ -13,33 +13,11 @@
       }
     ],
     "headers": [ {
-      "source" : "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
-      "headers" : [ {
-        "key" : "Access-Control-Allow-Origin",
-        "value" : "*"
-      } ]
-    },
-    {
-      "source" : "**/*.@(jpg|jpeg|gif|png)",
-      "headers" : [ {
-        "key" : "Access-Control-Allow-Origin",
-        "value" : "*"
-      } ]
-    },
-    {
-      "source" : "**/*.@(js)",
-      "headers" : [ {
-        "key" : "Access-Control-Allow-Origin",
-        "value" : "*"
-      } ]
-    },
-    {
-      "source" : "**/*.@(css)",
-      "headers" : [ {
-        "key" : "Access-Control-Allow-Origin",
-        "value" : "*"
-      } ]
-    }
-    ]
+      "source": "*",
+          "headers": [ {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+  } ]}]
+
   }
 }
