@@ -17,6 +17,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: NavigationServices.navigationKey,
       title: 'Tell Sam Admin panel',
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+          child: child!,
+        );
+      },
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

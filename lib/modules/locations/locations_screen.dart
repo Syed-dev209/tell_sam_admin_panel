@@ -84,15 +84,27 @@ class _LocationsScreenState extends State<LocationsScreen> {
                     height: 16,
                   ),
                   Flexible(
-                    child: DataTable(columns: const [
-                      DataColumn(
-                        label: Text('ID'),
-                      ),
-                      DataColumn(
-                        label: Text('Branch Name'),
-                      ),
-                      DataColumn(label: Text('Action'))
-                    ], rows: locationRows),
+                    child: SingleChildScrollView(
+                      child: DataTable(
+                          headingRowColor: MaterialStateColor.resolveWith(
+                            (states) => Color(0xffF3F3F3),
+                          ),
+                          headingRowHeight: 43.0,
+                          dataRowHeight: 50.0,
+                          dividerThickness: 0.0,
+                          columnSpacing: 20.0,
+                          showCheckboxColumn: false,
+                          columns: const [
+                            DataColumn(
+                              label: Text('ID'),
+                            ),
+                            DataColumn(
+                              label: Text('Branch Name'),
+                            ),
+                            DataColumn(label: Text('Action'))
+                          ],
+                          rows: locationRows),
+                    ),
                   ),
                 ],
               );
@@ -132,6 +144,9 @@ class _LocationsScreenState extends State<LocationsScreen> {
 
   addLocationRow(
       List<LocationsModel> allLocations, List<DataRow> locationRows) {
+    if (addingNew) {
+      return true;
+    }
     allLocations.sort((a, b) => a.locationId!.compareTo(b.locationId!));
     int highest = allLocations.last.locationId! + 1;
     String branchName = '';
@@ -146,13 +161,24 @@ class _LocationsScreenState extends State<LocationsScreen> {
               branchName = value;
             },
           )),
-          DataCell(TextButton(
-            onPressed: () => saveLocation(branchName),
-            child: saveLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : const Text('Save'),
+          DataCell(Row(
+            children: [
+              TextButton(
+                onPressed: () => saveLocation(branchName),
+                child: saveLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : const Text('Save'),
+              ),
+               TextButton(
+                  onPressed: () {
+                    locationRows.clear();
+                    addingNew = false;
+                    setState(() {});
+                  },
+                  child: const Text('Cancel'))
+            ],
           ))
         ],
       ),

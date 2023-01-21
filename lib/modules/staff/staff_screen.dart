@@ -95,14 +95,24 @@ class _StaffScreenState extends State<StaffScreen> {
                   Flexible(
                     child: SizedBox(
                       width: size.width,
-                      child: DataTable(
-                        columns: const [
-                          DataColumn(label: Text('ID')),
-                          DataColumn(label: Text('Name')),
-                          DataColumn(label: Text('Location ID')),
-                          DataColumn(label: Text('Action')),
-                        ],
-                        rows: staffRows,
+                      child: SingleChildScrollView(
+                        child: DataTable(
+                          headingRowColor: MaterialStateColor.resolveWith(
+                            (states) => Color(0xffF3F3F3),
+                          ),
+                          headingRowHeight: 43.0,
+                          dataRowHeight: 50.0,
+                          dividerThickness: 0.0,
+                          columnSpacing: 20.0,
+                          showCheckboxColumn: false,
+                          columns: const [
+                            DataColumn(label: Text('ID')),
+                            DataColumn(label: Text('Name')),
+                            DataColumn(label: Text('Location ID')),
+                            DataColumn(label: Text('Action')),
+                          ],
+                          rows: staffRows,
+                        ),
                       ),
                     ),
                   ),
@@ -145,6 +155,9 @@ class _StaffScreenState extends State<StaffScreen> {
   }
 
   addNewStaffRow(List<StaffModel> allStaff, List<DataRow> staffRow) {
+    if (isAddingNew) {
+      return;
+    }
     allStaff.sort((a, b) => a.staffId!.compareTo(b.staffId!));
     int highest = allStaff.last.staffId! + 1;
     String memberName = '';
@@ -164,10 +177,10 @@ class _StaffScreenState extends State<StaffScreen> {
           )),
           DataCell(Row(
             children: [
-              SizedBox(
-                width: 100,
+              Flexible(
                 child: TextField(
                   decoration: const InputDecoration(hintText: 'Location ID'),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   onChanged: (value) {
                     locationId = value;
                   },
@@ -176,8 +189,7 @@ class _StaffScreenState extends State<StaffScreen> {
               const SizedBox(
                 width: 4,
               ),
-              SizedBox(
-                width: 100,
+              Flexible(
                 child: TextField(
                   decoration: const InputDecoration(hintText: 'Enter PIN'),
                   keyboardType: TextInputType.number,
@@ -192,13 +204,24 @@ class _StaffScreenState extends State<StaffScreen> {
               ),
             ],
           )),
-          DataCell(TextButton(
-            onPressed: () => saveStaff(memberName, locationId, pin),
-            child: saveLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : const Text('Save'),
+          DataCell(Row(
+            children: [
+              TextButton(
+                onPressed: () => saveStaff(memberName, locationId, pin),
+                child: saveLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : const Text('Save'),
+              ),
+                TextButton(
+                    onPressed: () {
+                      staffRows.clear();
+                      isAddingNew = false;
+                      setState(() {});
+                    },
+                    child: const Text('Cancel'))
+            ],
           ))
         ],
       ),

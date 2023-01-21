@@ -19,7 +19,7 @@ class DioService {
       log(e.toString());
       log("=======================");
       if (e.response?.data != null) {
-        throw (e.response!.data);
+        throw (e.response!.data['message']);
       }
       throw ('Something went wrong');
     }
@@ -39,7 +39,7 @@ class DioService {
       print(e.toString());
       log("=======================");
       if (e.response?.data != null) {
-        throw (e.response!.data);
+        throw (e.response!.data['message']);
       }
       throw ('Something went wrong');
     }

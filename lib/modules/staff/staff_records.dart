@@ -61,6 +61,14 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                   );
                 }
                 return DataTable(
+                        headingRowColor: MaterialStateColor.resolveWith(
+              (states) => Color(0xffF3F3F3),
+            ),
+            headingRowHeight: 43.0,
+            dataRowHeight: 50.0,
+            dividerThickness: 0.0,
+            columnSpacing: 20.0,
+            showCheckboxColumn: false,
                   columns: const [
                     DataColumn(label: Text('Name')),
                     DataColumn(label: Text('Branch')),
