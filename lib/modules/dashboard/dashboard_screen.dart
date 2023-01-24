@@ -24,7 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             icon: const Icon(Icons.dashboard)),
             DashboardItem(
-            label: 'Locations',
+            label: 'Branches',
             id: 'locations',
             builder: () {
               return const LocationsScreen();

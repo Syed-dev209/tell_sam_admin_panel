@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
@@ -8,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffix;
   final Widget? prefix;
   final double? width;
+  final List<TextInputFormatter>? inputFormatters;
   const CustomTextField(
       {super.key,
       required this.controller,
@@ -16,17 +18,19 @@ class CustomTextField extends StatelessWidget {
       this.validator,
       this.suffix,
       this.prefix,
-      this.width});
+      this.width,
+      this.inputFormatters});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 52,
-      width: width??double.maxFinite,
+      width: width ?? double.maxFinite,
       child: TextFormField(
         controller: controller,
         obscureText: obscureText,
         validator: validator,
+        inputFormatters: inputFormatters,
         decoration: InputDecoration(
             hintText: hintText,
             suffixIcon: suffix,

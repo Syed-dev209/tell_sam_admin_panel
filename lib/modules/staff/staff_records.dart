@@ -6,7 +6,9 @@ import 'package:tell_sam_admin_panel/modules/staff/staff_controller.dart';
 
 class StaffRecordsScreen extends StatefulWidget {
   final int staffId;
-  const StaffRecordsScreen({super.key, required this.staffId});
+  final String name;
+  const StaffRecordsScreen(
+      {super.key, required this.staffId, required this.name});
 
   @override
   State<StaffRecordsScreen> createState() => _StaffRecordsScreenState();
@@ -39,6 +41,10 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
         child: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          title: Text(
+            widget.name ?? 'N/A',
+            style: TextStyle(color: Colors.black),
+          ),
           iconTheme: IconThemeData(color: Colors.black),
         ),
       ),
@@ -61,28 +67,28 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                   );
                 }
                 return DataTable(
-                        headingRowColor: MaterialStateColor.resolveWith(
-              (states) => Color(0xffF3F3F3),
-            ),
-            headingRowHeight: 43.0,
-            dataRowHeight: 50.0,
-            dividerThickness: 0.0,
-            columnSpacing: 20.0,
-            showCheckboxColumn: false,
+                  headingRowColor: MaterialStateColor.resolveWith(
+                    (states) => Color(0xffF3F3F3),
+                  ),
+                  headingRowHeight: 43.0,
+                  dataRowHeight: 50.0,
+                  dividerThickness: 0.0,
+                  columnSpacing: 20.0,
+                  showCheckboxColumn: false,
                   columns: const [
-                    DataColumn(label: Text('Name')),
                     DataColumn(label: Text('Branch')),
                     DataColumn(label: Text('Date')),
                     DataColumn(label: Text('Clock In')),
                     DataColumn(label: Text('Clock Out')),
+                    DataColumn(label: Text('Total Hours')),
                   ],
                   rows: snapshot.data!
                       .map<DataRow>((e) => DataRow(cells: [
-                            DataCell(Text("${e.name}")),
                             DataCell(Text("${e.branchName}")),
                             DataCell(Text("${e.date}")),
                             DataCell(Text("${e.clockIn}")),
                             DataCell(Text("${e.clockOut}")),
+                            DataCell(Text("${e.totalHrsSpent}"))
                           ]))
                       .toList(),
                 );

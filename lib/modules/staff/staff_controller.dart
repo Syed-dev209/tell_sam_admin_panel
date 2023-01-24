@@ -35,6 +35,36 @@ Future<bool> addStaff(String name, int locationId, String pin) async {
   }
 }
 
+Future<bool> editStaff(
+    int staffId, String name, int locationId, String pin) async {
+  try {
+    Map<String, dynamic> body = {
+      "staff_id": staffId,
+      "staff_name": name,
+      "staff_loc_id": locationId,
+      "staff_pin": pin
+    };
+    var response = await DioService.post(APIS.editStaff, body: body);
+    Utils.showToast(response.data['message']);
+    return response.data['status'] == 1;
+  } catch (e) {
+    Utils.showToast(e.toString());
+    return false;
+  }
+}
+
+Future<bool> deleteStaff(int staffId) async {
+  try {
+    Map<String, dynamic> body = {"staff_id": staffId};
+    var response = await DioService.post(APIS.deleteStaff, body: body);
+    Utils.showToast(response.data['message']);
+    return response.data['status'] == 1;
+  } catch (e) {
+    Utils.showToast(e.toString());
+    return false;
+  }
+}
+
 Future<List<StaffRecord>?> getStaffRecords(int staffId) async {
   try {
     var response =
@@ -42,29 +72,43 @@ Future<List<StaffRecord>?> getStaffRecords(int staffId) async {
     List data = response.data["data"];
     List<StaffRecord> staffRecords = [];
     while (data.isNotEmpty) {
+      var clockInDetails = data.first;
       String clockInDateTime = data.first["record_timestamp"];
-      String clockInDate = Utils.formatDate(DateTime.parse(clockInDateTime));
+      String clockInDate = Utils.formatDate(clockInDateTime);
       var clockOutDetails = data.firstWhere(
         (element) =>
-            Utils.formatDate(DateTime.parse(element["record_timestamp"])) ==
-                clockInDate &&
+            Utils.formatDate(element["record_timestamp"]) == clockInDate &&
             element["record_type"] == "clockout",
         orElse: () => null,
       );
+      DateTime clockInTime = DateTime.parse(clockInDateTime);
+
       staffRecords.add(
         StaffRecord(
             name: data.first["staff_name"],
             branchName: data.first["location_name"],
             date: clockInDate,
-            clockIn: Utils.formatTime(DateTime.parse(clockInDateTime)),
+            clockIn: Utils.formatTime(clockInDateTime),
+            clockInRecordId: clockInDetails["record_id"],
+            clockOutRecordId: clockOutDetails!=null? clockOutDetails["record_id"]:null,
             clockOut: clockOutDetails != null
-                ? Utils.formatTime(
-                    DateTime.parse(clockOutDetails["record_timestamp"]))
-                : '-'),
+                ? Utils.formatTime(clockOutDetails["record_timestamp"])
+                : '-',
+            totalHrsSpent: Utils.calculateHours(
+                clockInDateTime,
+                clockOutDetails != null
+                    ? clockOutDetails["record_timestamp"]
+                    : DateTime.now().toString())),
       );
       data.removeWhere((element) =>
-          Utils.formatDate(DateTime.parse(element["record_timestamp"])) ==
-          Utils.formatDate(DateTime.parse(clockInDateTime)));
+          element["record_timestamp"] == clockInDateTime &&
+          element["record_type"] == "clockin");
+      if (clockOutDetails != null) {
+        data.removeWhere((element) =>
+            element["record_timestamp"] ==
+                clockOutDetails["record_timestamp"] &&
+            element["record_type"] == "clockout");
+      }
     }
     return staffRecords;
   } catch (e) {

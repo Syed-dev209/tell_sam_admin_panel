@@ -5,6 +5,7 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:tell_sam_admin_panel/Utils/utils.dart';
 import 'package:tell_sam_admin_panel/common/primary_button.dart';
 import 'package:tell_sam_admin_panel/modules/locations/Model/location_model.dart';
+import 'package:tell_sam_admin_panel/modules/locations/Widget/location_edit_popup.dart';
 import 'package:tell_sam_admin_panel/modules/locations/locationController.dart';
 
 class LocationsScreen extends StatefulWidget {
@@ -25,6 +26,13 @@ class _LocationsScreenState extends State<LocationsScreen> {
       locationsStream.add(value);
       return value;
     });
+  }
+
+  refreshState() {
+    locationRows.clear();
+    allLocations.clear();
+    locationsStream.addError('Loading');
+    loadData();
   }
 
   @override
@@ -75,7 +83,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
                       PrimaryButton(
                         onTap: () => addLocationRow(allLocations, locationRows),
                         height: 44,
-                        title: '+ Add new Location',
+                        title: '+ Add new Branch',
                         width: size.width * 0.15,
                       )
                     ],
@@ -122,20 +130,28 @@ class _LocationsScreenState extends State<LocationsScreen> {
         DataCell(
           Text("${e.locationName}"),
         ),
-        DataCell(getLocationActions())
+        DataCell(getLocationActions(
+            onEdit: () =>
+                LocationEdit.show(context, e).then((value) => refreshState()),
+            onDelete: () => deleteaction(e)))
       ]));
     }
   }
 
-  getLocationActions() {
+  deleteaction(LocationsModel model) async {
+    await deleteLocation(model.locationId!);
+    refreshState();
+  }
+
+  getLocationActions({required Function onEdit, required Function onDelete}) {
     return Row(
       children: [
         IconButton(
-          onPressed: () {},
+          onPressed: () => onDelete(),
           icon: Icon(FeatherIcons.trash),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () => onEdit(),
           icon: Icon(FeatherIcons.edit),
         )
       ],
@@ -171,7 +187,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
                       )
                     : const Text('Save'),
               ),
-               TextButton(
+              TextButton(
                   onPressed: () {
                     locationRows.clear();
                     addingNew = false;

@@ -7,6 +7,7 @@ import 'package:tell_sam_admin_panel/Utils/global_nav.dart';
 import 'package:tell_sam_admin_panel/Utils/utils.dart';
 import 'package:tell_sam_admin_panel/common/primary_button.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Model/staff_model.dart';
+import 'package:tell_sam_admin_panel/modules/staff/Widget/staff_edit_popup.dart';
 import 'package:tell_sam_admin_panel/modules/staff/staff_controller.dart';
 import 'package:tell_sam_admin_panel/modules/staff/staff_records.dart';
 
@@ -28,6 +29,13 @@ class _StaffScreenState extends State<StaffScreen> {
       staffStream.add(value);
       return value;
     });
+  }
+
+  refreshState() {
+    allStaff.clear();
+    staffRows.clear();
+    staffStream.addError('Loading');
+    loadData();
   }
 
   @override
@@ -108,7 +116,7 @@ class _StaffScreenState extends State<StaffScreen> {
                           columns: const [
                             DataColumn(label: Text('ID')),
                             DataColumn(label: Text('Name')),
-                            DataColumn(label: Text('Location ID')),
+                            DataColumn(label: Text('Branch ID')),
                             DataColumn(label: Text('Action')),
                           ],
                           rows: staffRows,
@@ -127,27 +135,37 @@ class _StaffScreenState extends State<StaffScreen> {
     for (var e in allStaff) {
       staffRows.add(DataRow(
           onSelectChanged: (value) {
-            NavigationServices.pushScreen(
-                StaffRecordsScreen(staffId: e.staffId!));
+            NavigationServices.pushScreen(StaffRecordsScreen(
+              staffId: e.staffId!,
+              name: e.staffName ?? "N?a",
+            ));
           },
           cells: [
             DataCell(Text("${e.staffId}")),
             DataCell(Text("${e.staffName}")),
             DataCell(Text("${e.staffLocId}")),
-            DataCell(staffAction()),
+            DataCell(staffAction(
+                onEdit: () => StaffEditPopup.show(context, e)
+                    .then((value) => refreshState()),
+                onDelete: () => deleteStaffAction(e))),
           ]));
     }
   }
 
-  staffAction() {
+  deleteStaffAction(StaffModel model) async {
+    await deleteStaff(model.staffId!);
+    refreshState();
+  }
+
+  staffAction({required Function onEdit, required Function onDelete}) {
     return Row(
       children: [
         IconButton(
-          onPressed: () {},
+          onPressed: () => onDelete(),
           icon: Icon(FeatherIcons.trash),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () => onEdit(),
           icon: Icon(FeatherIcons.edit),
         )
       ],
@@ -214,13 +232,13 @@ class _StaffScreenState extends State<StaffScreen> {
                       )
                     : const Text('Save'),
               ),
-                TextButton(
-                    onPressed: () {
-                      staffRows.clear();
-                      isAddingNew = false;
-                      setState(() {});
-                    },
-                    child: const Text('Cancel'))
+              TextButton(
+                  onPressed: () {
+                    staffRows.clear();
+                    isAddingNew = false;
+                    setState(() {});
+                  },
+                  child: const Text('Cancel'))
             ],
           ))
         ],

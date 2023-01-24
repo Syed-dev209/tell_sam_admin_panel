@@ -27,3 +27,30 @@ Future<bool> addLocation(String branchName) async {
     return false;
   }
 }
+
+Future<bool> editLocation(int locationId, String locationName) async {
+  try {
+    Map<String, dynamic> body = {
+      "location_name": locationName,
+      "location_id": locationId.toString()
+    };
+    var response = await DioService.post(APIS.editLocation, body: body);
+    Utils.showToast(response.data['message']);
+    return response.data['status'] == 1;
+  } catch (e) {
+    Utils.showToast(e.toString());
+    return false;
+  }
+}
+
+Future<bool> deleteLocation(int locationId) async {
+  try {
+    Map<String, dynamic> body = {"location_id": locationId};
+    var response = await DioService.post(APIS.deleteLocation, body: body);
+    Utils.showToast(response.data['message']);
+    return response.data['status'] == 1;
+  } catch (e) {
+    Utils.showToast(e.toString());
+    return false;
+  }
+}
