@@ -7,7 +7,7 @@ import 'package:tell_sam_admin_panel/modules/locations/locationController.dart';
 
 class LocationEdit {
   static Future show(context, LocationsModel model) async {
-    await showDialog(
+    return await showDialog(
         context: context,
         builder: (context) {
           bool buttonLoading = false;
@@ -29,6 +29,7 @@ class LocationEdit {
                       CustomTextField(
                         controller: branchName,
                         hintText: 'Enter branch name',
+                        label: 'Branch Name',
                         validator: Validators.requiredValidator,
                       ),
                       const SizedBox(
@@ -40,12 +41,12 @@ class LocationEdit {
                             setState(() {
                               buttonLoading = true;
                             });
-                            await editLocation(
+                            bool check = await editLocation(
                                 model.locationId!, branchName.text);
                             setState(() {
                               buttonLoading = false;
                             });
-                            Navigator.pop(context);
+                            Navigator.pop(context, check);
                           }
                         },
                         title: 'Update',

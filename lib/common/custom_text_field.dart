@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
+  final String? label;
   final bool obscureText;
   final TextEditingController controller;
   final String? Function(String?)? validator;
@@ -19,7 +20,8 @@ class CustomTextField extends StatelessWidget {
       this.suffix,
       this.prefix,
       this.width,
-      this.inputFormatters});
+      this.inputFormatters,
+      this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class CustomTextField extends StatelessWidget {
         inputFormatters: inputFormatters,
         decoration: InputDecoration(
             hintText: hintText,
+            labelText: label,
             suffixIcon: suffix,
             prefixIcon: prefix,
             fillColor: Colors.black.withOpacity(0.05),

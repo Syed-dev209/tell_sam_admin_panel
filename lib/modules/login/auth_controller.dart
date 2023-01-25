@@ -10,12 +10,14 @@ Future<bool> loginAdmin(String username, String password) async {
         body: {"admin_username": username, "admin_password": password});
     bool loggedIn = response.data['status'] == 1;
     if (!loggedIn) {
-      Utils.showToast('Invalid username or password');
+      Utils.showToast('Invalid username or password', AlertType.error);
       return false;
+    } else {
+      Utils.showToast('Logged in', AlertType.success);
+      return loggedIn;
     }
-    return loggedIn;
   } catch (e) {
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     log(e.toString());
     return false;
   }

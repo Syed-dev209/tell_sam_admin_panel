@@ -32,6 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Image.asset('assets/logo.png'),
+                const SizedBox(
+                  height: 24,
+                ),
                 CustomTextField(
                   width: size.width * 0.3,
                   controller: userName,

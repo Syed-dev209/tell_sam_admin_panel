@@ -2,10 +2,11 @@ class StaffRecord {
   String? name;
   String? date;
   String? branchName;
-  String? clockIn;
-  String? clockOut;
+  int? branchId;
+  String? clockIn, rawClockIn;
+  String? clockOut, rawClockOut;
   int? clockInRecordId, clockOutRecordId;
-  String? totalHrsSpent;
+  String? totalHrsSpent, rawDate;
 
   StaffRecord(
       {this.branchName,
@@ -15,5 +16,9 @@ class StaffRecord {
       this.name,
       this.totalHrsSpent,
       this.clockInRecordId,
-      this.clockOutRecordId});
+      this.clockOutRecordId,
+      this.rawClockIn,
+      this.rawClockOut,
+      this.rawDate,
+      this.branchId});
 }

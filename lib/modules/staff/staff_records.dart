@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Model/staff_record_model.dart';
+import 'package:tell_sam_admin_panel/modules/staff/Widget/staff_record_popup.dart';
 import 'package:tell_sam_admin_panel/modules/staff/staff_controller.dart';
 
 class StaffRecordsScreen extends StatefulWidget {
@@ -26,7 +27,6 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     staffRecordsStream = StreamController<List<StaffRecord>?>.broadcast();
     loadData();
@@ -37,15 +37,13 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
         child: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
-            widget.name ?? 'N/A',
-            style: TextStyle(color: Colors.black),
+            widget.name,
           ),
-          iconTheme: IconThemeData(color: Colors.black),
         ),
       ),
       body: Container(
@@ -68,7 +66,7 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                 }
                 return DataTable(
                   headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => Color(0xffF3F3F3),
+                    (states) => const Color.fromARGB(66, 35, 35, 35),
                   ),
                   headingRowHeight: 43.0,
                   dataRowHeight: 50.0,
@@ -86,13 +84,39 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                       .map<DataRow>((e) => DataRow(cells: [
                             DataCell(Text("${e.branchName}")),
                             DataCell(Text("${e.date}")),
-                            DataCell(Text("${e.clockIn}")),
-                            DataCell(Text("${e.clockOut}")),
+                            DataCell(GestureDetector(
+                                onTap: () => openEditTimeBottomSheet(
+                                    e.clockInRecordId,
+                                    e.rawClockIn,
+                                    e.rawDate!,
+                                    Entry.clockIn,
+                                    e.branchId!,
+                                    widget.staffId),
+                                child: Text("${e.clockIn}"))),
+                            DataCell(GestureDetector(
+                                onTap: () => openEditTimeBottomSheet(
+                                    e.clockOutRecordId,
+                                    e.rawClockOut,
+                                    e.rawDate!,
+                                    Entry.clockOut,
+                                    e.branchId!,
+                                    widget.staffId),
+                                child: Text("${e.clockOut}"))),
                             DataCell(Text("${e.totalHrsSpent}"))
                           ]))
                       .toList(),
                 );
               })),
     );
+  }
+
+  openEditTimeBottomSheet(int? recordId, String? rawDateTime, String rawDate,
+      Entry type, int locationId, int staffId) async {
+    bool? check = await StaffRecordPopup.show(
+        context, recordId, rawDateTime, rawDate, locationId, type, staffId);
+    if (check != null && check) {
+      staffRecordsStream.addError('Loading');
+      loadData();
+    }
   }
 }

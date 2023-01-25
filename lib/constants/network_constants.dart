@@ -13,9 +13,12 @@ class APIS {
   static const String deleteStaff = 'staff/delete';
 
   static const String staffRecords = 'admin/staff/records';
+  static const String editStaffRecord = 'admin/staff/record/edit';
 
   static const String allLocations = 'locations';
   static const String addLocation = 'locations/add';
   static const String editLocation = 'location/edit';
   static const String deleteLocation = 'location/delete';
+
+  static const String clock = 'admin/record/add';
 }

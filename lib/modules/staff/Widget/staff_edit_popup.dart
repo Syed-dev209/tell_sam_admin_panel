@@ -3,12 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:tell_sam_admin_panel/Utils/global_nav.dart';
 import 'package:tell_sam_admin_panel/Utils/validators.dart';
 import 'package:tell_sam_admin_panel/common/custom_text_field.dart';
+import 'package:tell_sam_admin_panel/common/location_drop_down.dart';
 import 'package:tell_sam_admin_panel/common/primary_button.dart';
+import 'package:tell_sam_admin_panel/modules/locations/Model/location_model.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Model/staff_model.dart';
 import 'package:tell_sam_admin_panel/modules/staff/staff_controller.dart';
 
 class StaffEditPopup {
-  static Future show(context, StaffModel staff) async {
+  static Future show(
+    context,
+    StaffModel staff,
+    List<LocationsModel> allLocations,
+  ) async {
     TextEditingController name = TextEditingController(text: staff.staffName);
     TextEditingController locationID =
         TextEditingController(text: staff.staffId.toString());
@@ -33,24 +39,27 @@ class StaffEditPopup {
                       CustomTextField(
                         controller: name,
                         hintText: 'Enter name',
+                        label: 'Name',
                         validator: Validators.requiredValidator,
                       ),
                       const SizedBox(
                         height: 8,
                       ),
-                      CustomTextField(
-                        controller: locationID,
-                        hintText: 'Enter Branch ID',
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                      ),
+                      LocationDropDown(
+                          showDecoration: true,
+                          width: double.maxFinite,
+                          locations: allLocations,
+                          selectedLocation: staff.staffLocId,
+                          onChange: (value) {
+                            locationID.text = value.locationId.toString();
+                          }),
                       const SizedBox(
-                        height: 8,
+                        height: 10,
                       ),
                       CustomTextField(
                         controller: pin,
                         hintText: 'Enter PIN',
+                        label: 'PIN',
                         validator: Validators.lengthValidator,
                         inputFormatters: [
                           LengthLimitingTextInputFormatter(4),
@@ -66,9 +75,12 @@ class StaffEditPopup {
                             setState(() {
                               buttonLoading = true;
                             });
-                            await editStaff(staff.staffId!, name.text,
-                                int.parse(locationID.text), pin.text);
-                            Navigator.pop(context);
+                            bool check = await editStaff(
+                                staff.staffId!,
+                                name.text,
+                                int.parse(locationID.text),
+                                pin.text);
+                            Navigator.pop(context, check);
                           }
                         },
                         title: 'Update',

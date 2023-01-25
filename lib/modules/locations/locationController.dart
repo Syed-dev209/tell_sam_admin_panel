@@ -12,7 +12,7 @@ Future<List<LocationsModel>?> getAllLocations() async {
     }
     return allLocations;
   } catch (e) {
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     return null;
   }
 }
@@ -21,9 +21,10 @@ Future<bool> addLocation(String branchName) async {
   try {
     var response =
         await DioService.post(APIS.addLocation, body: {"name": branchName});
+    Utils.showToast(response.data['message'], AlertType.success);
     return response.data['status'] == 1;
   } catch (e) {
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     return false;
   }
 }
@@ -35,10 +36,10 @@ Future<bool> editLocation(int locationId, String locationName) async {
       "location_id": locationId.toString()
     };
     var response = await DioService.post(APIS.editLocation, body: body);
-    Utils.showToast(response.data['message']);
+    Utils.showToast(response.data['message'], AlertType.success);
     return response.data['status'] == 1;
   } catch (e) {
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     return false;
   }
 }
@@ -47,10 +48,10 @@ Future<bool> deleteLocation(int locationId) async {
   try {
     Map<String, dynamic> body = {"location_id": locationId};
     var response = await DioService.post(APIS.deleteLocation, body: body);
-    Utils.showToast(response.data['message']);
+    Utils.showToast(response.data['message'], AlertType.success);
     return response.data['status'] == 1;
   } catch (e) {
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     return false;
   }
 }

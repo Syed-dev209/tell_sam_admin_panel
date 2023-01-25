@@ -69,12 +69,13 @@ class _LocationsScreenState extends State<LocationsScreen> {
                 getLocationRow(allLocations, locationRows);
               }
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'All Staff members',
+                        'All Branches',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -92,26 +93,29 @@ class _LocationsScreenState extends State<LocationsScreen> {
                     height: 16,
                   ),
                   Flexible(
-                    child: SingleChildScrollView(
-                      child: DataTable(
-                          headingRowColor: MaterialStateColor.resolveWith(
-                            (states) => Color(0xffF3F3F3),
-                          ),
-                          headingRowHeight: 43.0,
-                          dataRowHeight: 50.0,
-                          dividerThickness: 0.0,
-                          columnSpacing: 20.0,
-                          showCheckboxColumn: false,
-                          columns: const [
-                            DataColumn(
-                              label: Text('ID'),
+                    child: SizedBox(
+                      width: size.width,
+                      child: SingleChildScrollView(
+                        child: DataTable(
+                            headingRowColor: MaterialStateColor.resolveWith(
+                              (states) => const Color.fromARGB(66, 35, 35, 35),
                             ),
-                            DataColumn(
-                              label: Text('Branch Name'),
-                            ),
-                            DataColumn(label: Text('Action'))
-                          ],
-                          rows: locationRows),
+                            headingRowHeight: 43.0,
+                            dataRowHeight: 50.0,
+                            dividerThickness: 0.0,
+                            columnSpacing: 20.0,
+                            showCheckboxColumn: false,
+                            columns: const [
+                              DataColumn(
+                                label: Text('ID'),
+                              ),
+                              DataColumn(
+                                label: Text('Branch Name'),
+                              ),
+                              DataColumn(label: Text('Action'))
+                            ],
+                            rows: locationRows),
+                      ),
                     ),
                   ),
                 ],
@@ -131,8 +135,9 @@ class _LocationsScreenState extends State<LocationsScreen> {
           Text("${e.locationName}"),
         ),
         DataCell(getLocationActions(
-            onEdit: () =>
-                LocationEdit.show(context, e).then((value) => refreshState()),
+            onEdit: () => LocationEdit.show(context, e).then((value) {
+                  if (value != null && value) refreshState();
+                }),
             onDelete: () => deleteaction(e)))
       ]));
     }
@@ -166,7 +171,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
     allLocations.sort((a, b) => a.locationId!.compareTo(b.locationId!));
     int highest = allLocations.last.locationId! + 1;
     String branchName = '';
-    locationRows.add(
+    locationRows.insert(0,
       DataRow(
         cells: [
           DataCell(
@@ -206,7 +211,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
 
   saveLocation(String name) async {
     if (name.isEmpty) {
-      Utils.showToast('Name is required');
+      Utils.showToast('Name is required',AlertType.warning);
       return;
     }
     setState(() {

@@ -14,7 +14,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return ReadyDashboard(
-      iconsWhenCollapsedInDesktop:true,
+      drawerOptions: (val) {
+        return DrawerOptions(
+            logo: Center(
+          child: Container(
+            height: 80,
+            width: 80,
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, border: Border.all()),
+            child: Center(
+              child: Image.asset(
+                'assets/logoShort.png',
+                height: 30,
+              ),
+            ),
+          ),
+        ));
+      },
+      iconsWhenCollapsedInDesktop: true,
       items: [
         DashboardItem(
             label: 'Staff',
@@ -23,7 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return const StaffScreen();
             },
             icon: const Icon(Icons.dashboard)),
-            DashboardItem(
+        DashboardItem(
             label: 'Branches',
             id: 'locations',
             builder: () {

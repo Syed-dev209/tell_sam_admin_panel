@@ -9,7 +9,7 @@ class StaffModel {
 
   int? staffId;
   int? staffLocId;
-  String? staffName, pin;
+  String? staffName, pin, branchName;
   bool isEditMode = false;
 
   StaffModel({
@@ -23,6 +23,7 @@ class StaffModel {
     staffLocId = json['staff_loc_id']?.toInt();
     staffName = json['staff_name']?.toString();
     pin = json['staff_pin']?.toString();
+    branchName = json['location_name'];
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};

@@ -6,6 +6,8 @@ import 'package:tell_sam_admin_panel/constants/network_constants.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Model/staff_model.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Model/staff_record_model.dart';
 
+enum Entry { clockIn, clockOut }
+
 Future<List<StaffModel>?> getAllStaffMembers() async {
   try {
     var response = await DioService.get(APIS.allStaff);
@@ -15,7 +17,7 @@ Future<List<StaffModel>?> getAllStaffMembers() async {
     }
     return staffMembers;
   } catch (e) {
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     return null;
   }
 }
@@ -28,9 +30,10 @@ Future<bool> addStaff(String name, int locationId, String pin) async {
       "pin": pin
     };
     var response = await DioService.post(APIS.addStaff, body: body);
+    Utils.showToast(response.data['message'].toString(), AlertType.success);
     return response.data['status'] == 1;
   } catch (e) {
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     return false;
   }
 }
@@ -45,10 +48,10 @@ Future<bool> editStaff(
       "staff_pin": pin
     };
     var response = await DioService.post(APIS.editStaff, body: body);
-    Utils.showToast(response.data['message']);
+    Utils.showToast(response.data['message'], AlertType.success);
     return response.data['status'] == 1;
   } catch (e) {
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     return false;
   }
 }
@@ -57,10 +60,10 @@ Future<bool> deleteStaff(int staffId) async {
   try {
     Map<String, dynamic> body = {"staff_id": staffId};
     var response = await DioService.post(APIS.deleteStaff, body: body);
-    Utils.showToast(response.data['message']);
+    Utils.showToast(response.data['message'], AlertType.success);
     return response.data['status'] == 1;
   } catch (e) {
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     return false;
   }
 }
@@ -74,6 +77,7 @@ Future<List<StaffRecord>?> getStaffRecords(int staffId) async {
     while (data.isNotEmpty) {
       var clockInDetails = data.first;
       String clockInDateTime = data.first["record_timestamp"];
+      String rawDate = data.first["record_timestamp"]?.substring(0, 10);
       String clockInDate = Utils.formatDate(clockInDateTime);
       var clockOutDetails = data.firstWhere(
         (element) =>
@@ -87,18 +91,25 @@ Future<List<StaffRecord>?> getStaffRecords(int staffId) async {
         StaffRecord(
             name: data.first["staff_name"],
             branchName: data.first["location_name"],
+            branchId: data.first["location_id"],
             date: clockInDate,
             clockIn: Utils.formatTime(clockInDateTime),
+            rawDate: rawDate,
+            rawClockIn: clockInDateTime,
             clockInRecordId: clockInDetails["record_id"],
-            clockOutRecordId: clockOutDetails!=null? clockOutDetails["record_id"]:null,
+            clockOutRecordId:
+                clockOutDetails != null ? clockOutDetails["record_id"] : null,
             clockOut: clockOutDetails != null
                 ? Utils.formatTime(clockOutDetails["record_timestamp"])
                 : '-',
+            rawClockOut: clockOutDetails != null
+                ? clockOutDetails["record_timestamp"]
+                : null,
             totalHrsSpent: Utils.calculateHours(
                 clockInDateTime,
                 clockOutDetails != null
                     ? clockOutDetails["record_timestamp"]
-                    : DateTime.now().toString())),
+                    : '')),
       );
       data.removeWhere((element) =>
           element["record_timestamp"] == clockInDateTime &&
@@ -113,7 +124,42 @@ Future<List<StaffRecord>?> getStaffRecords(int staffId) async {
     return staffRecords;
   } catch (e) {
     log(e.toString());
-    Utils.showToast(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
     return null;
+  }
+}
+
+Future<bool> editClockInClockOutTime(String dateTime, int recordId) async {
+  try {
+    Map<String, dynamic> body = {
+      "record_id": recordId,
+      "record_timestamp": dateTime
+    };
+    var response = await DioService.post(APIS.editStaffRecord, body: body);
+    Utils.showToast(response.data['message'].toString(), AlertType.success);
+    return response.data['status'] == 1;
+  } catch (e) {
+    Utils.showToast(e.toString(), AlertType.error);
+    return false;
+  }
+}
+
+Future clockInOrOut(
+    context, int staffId, int locationId, Entry type, DateTime current) async {
+  try {
+    Map<String, dynamic> data = {
+      "staff_id": staffId,
+      "location_id": locationId,
+      "type": type == Entry.clockIn ? 'clockin' : 'clockout',
+      "timestamp": current.toString()
+    };
+    var response = await DioService.post(APIS.clock, body: data);
+
+    Utils.showToast(response.data['message'].toString(), AlertType.success);
+    return response.data['status'] == 1;
+  } catch (e) {
+    log(e.toString());
+    Utils.showToast(e.toString(), AlertType.success);
+    return false;
   }
 }

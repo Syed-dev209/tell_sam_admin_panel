@@ -5,7 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:tell_sam_admin_panel/Utils/global_nav.dart';
 import 'package:tell_sam_admin_panel/Utils/utils.dart';
+import 'package:tell_sam_admin_panel/common/location_drop_down.dart';
 import 'package:tell_sam_admin_panel/common/primary_button.dart';
+import 'package:tell_sam_admin_panel/modules/locations/Model/location_model.dart';
+import 'package:tell_sam_admin_panel/modules/locations/locationController.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Model/staff_model.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Widget/staff_edit_popup.dart';
 import 'package:tell_sam_admin_panel/modules/staff/staff_controller.dart';
@@ -23,11 +26,19 @@ class _StaffScreenState extends State<StaffScreen> {
   List<DataRow> staffRows = [];
   List<StaffModel> allStaff = [];
   bool isAddingNew = false, saveLoading = false;
-
+  List<LocationsModel> allLocations = [];
   loadData() {
     getAllStaffMembers().then((value) {
       staffStream.add(value);
       return value;
+    });
+  }
+
+  loadLocations() {
+    getAllLocations().then((value) {
+      if (value != null) {
+        allLocations = [...value];
+      }
     });
   }
 
@@ -43,6 +54,7 @@ class _StaffScreenState extends State<StaffScreen> {
     super.initState();
     staffStream = StreamController<List<StaffModel>?>.broadcast();
     loadData();
+    loadLocations();
   }
 
   @override
@@ -106,7 +118,7 @@ class _StaffScreenState extends State<StaffScreen> {
                       child: SingleChildScrollView(
                         child: DataTable(
                           headingRowColor: MaterialStateColor.resolveWith(
-                            (states) => Color(0xffF3F3F3),
+                            (states) => const Color.fromARGB(66, 35, 35, 35),
                           ),
                           headingRowHeight: 43.0,
                           dataRowHeight: 50.0,
@@ -116,7 +128,7 @@ class _StaffScreenState extends State<StaffScreen> {
                           columns: const [
                             DataColumn(label: Text('ID')),
                             DataColumn(label: Text('Name')),
-                            DataColumn(label: Text('Branch ID')),
+                            DataColumn(label: Text('Branch')),
                             DataColumn(label: Text('Action')),
                           ],
                           rows: staffRows,
@@ -143,10 +155,11 @@ class _StaffScreenState extends State<StaffScreen> {
           cells: [
             DataCell(Text("${e.staffId}")),
             DataCell(Text("${e.staffName}")),
-            DataCell(Text("${e.staffLocId}")),
+            DataCell(Text("${e.branchName}")),
             DataCell(staffAction(
-                onEdit: () => StaffEditPopup.show(context, e)
-                    .then((value) => refreshState()),
+                onEdit: () => StaffEditPopup.show(context, e,allLocations).then((value) {
+                      if (value != null && value) refreshState();
+                    }),
                 onDelete: () => deleteStaffAction(e))),
           ]));
     }
@@ -181,7 +194,8 @@ class _StaffScreenState extends State<StaffScreen> {
     String memberName = '';
     String locationId = '';
     String pin = '';
-    staffRows.add(
+    staffRows.insert(
+      0,
       DataRow(
         cells: [
           DataCell(
@@ -196,14 +210,11 @@ class _StaffScreenState extends State<StaffScreen> {
           DataCell(Row(
             children: [
               Flexible(
-                child: TextField(
-                  decoration: const InputDecoration(hintText: 'Location ID'),
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  onChanged: (value) {
-                    locationId = value;
-                  },
-                ),
-              ),
+                  child: LocationDropDown(
+                      locations: allLocations,
+                      onChange: (value) {
+                        locationId = value.locationId.toString();
+                      })),
               const SizedBox(
                 width: 4,
               ),
@@ -251,7 +262,7 @@ class _StaffScreenState extends State<StaffScreen> {
 
   saveStaff(String name, String locationId, String pin) async {
     if (name.isEmpty || locationId.isEmpty || pin.isEmpty) {
-      Utils.showToast('All Fields are mandatory');
+      Utils.showToast('All Fields are mandatory', AlertType.warning);
       return;
     }
     setState(() {
