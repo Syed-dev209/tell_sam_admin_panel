@@ -54,8 +54,8 @@ class _EditStaffPopupBodyState extends State<EditStaffPopupBody> {
       ),
       title: const Text('Edit Time'),
       content: SizedBox(
-        height: 230,
-        width: 500,
+        height: 180,
+        width: 300,
         child: Column(
           children: [
             CustomTimePicker(
@@ -89,7 +89,13 @@ class _EditStaffPopupBodyState extends State<EditStaffPopupBody> {
     setState(() {
       buttonLoading = false;
     });
-    Navigator.pop(context, check);
+    pop(check);
+  }
+
+  pop(bool result) {
+    print('pop called');
+    Navigator.pop(context, result);
+    Navigator.pop(context, result);
   }
 
   addNewRecord() async {
@@ -102,6 +108,6 @@ class _EditStaffPopupBodyState extends State<EditStaffPopupBody> {
     setState(() {
       buttonLoading = false;
     });
-    Navigator.pop(context, check);
+    pop(check);
   }
 }

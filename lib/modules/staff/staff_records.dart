@@ -84,24 +84,34 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                       .map<DataRow>((e) => DataRow(cells: [
                             DataCell(Text("${e.LocationName}")),
                             DataCell(Text("${e.date}")),
-                            DataCell(GestureDetector(
-                                onTap: () => openEditTimeBottomSheet(
-                                    e.clockInRecordId,
-                                    e.rawClockIn,
-                                    e.rawDate!,
-                                    Entry.clockIn,
-                                    e.LocationId!,
-                                    widget.staffId),
-                                child: Text("${e.clockIn}"))),
-                            DataCell(GestureDetector(
-                                onTap: () => openEditTimeBottomSheet(
-                                    e.clockOutRecordId,
-                                    e.rawClockOut,
-                                    e.rawDate!,
-                                    Entry.clockOut,
-                                    e.LocationId!,
-                                    widget.staffId),
-                                child: Text("${e.clockOut}"))),
+                            DataCell(Tooltip(
+                              message: 'Edit clock in time',
+                              child: TextButton(
+                                  onPressed: () => openEditTimeBottomSheet(
+                                      e.clockInRecordId,
+                                      e.rawClockIn,
+                                      e.rawDate!,
+                                      Entry.clockIn,
+                                      e.LocationId!,
+                                      widget.staffId),
+                                  child: Text("${e.clockIn}",
+                                      style: TextStyle(color: Colors.white))),
+                            )),
+                            DataCell(Tooltip(
+                              message: 'Edit clock out time',
+                              child: TextButton(
+                                  onPressed: () => openEditTimeBottomSheet(
+                                      e.clockOutRecordId,
+                                      e.rawClockOut,
+                                      e.rawDate!,
+                                      Entry.clockOut,
+                                      e.LocationId!,
+                                      widget.staffId),
+                                  child: Text(
+                                    "${e.clockOut}",
+                                    style: TextStyle(color: Colors.white),
+                                  )),
+                            )),
                             DataCell(Text("${e.totalHrsSpent}"))
                           ]))
                       .toList(),

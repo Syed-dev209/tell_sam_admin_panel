@@ -12,14 +12,18 @@ class LocationEdit {
     return await showDialog(
         context: context,
         builder: (context2) {
-          return EditLocation(model);
+          return EditLocation(model, (val) {
+            Navigator.pop(context, val);
+            Navigator.pop(context, val);
+          });
         });
   }
 }
 
 class EditLocation extends StatefulWidget {
-  const EditLocation(this.model, {Key? key}) : super(key: key);
+  const EditLocation(this.model, this.onPop, {Key? key}) : super(key: key);
   final LocationsModel model;
+  final Function(bool) onPop;
   @override
   State<EditLocation> createState() => _EditLocationState();
 }
@@ -62,12 +66,12 @@ class _EditLocationState extends State<EditLocation> {
                     setState(() {
                       buttonLoading = true;
                     });
-                    Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    ).pop(true);
                     bool check = await editLocation(
                         widget.model.locationId!, LocationName.text, context);
+                    setState(() {
+                      buttonLoading = false;
+                    });
+                    pop(check);
                   }
                 },
                 title: 'Update',
@@ -78,5 +82,11 @@ class _EditLocationState extends State<EditLocation> {
         ),
       ),
     );
+  }
+
+  pop(bool result) {
+    print('pop called');
+    // Navigator.pop(context, result);
+    widget.onPop(result);
   }
 }
