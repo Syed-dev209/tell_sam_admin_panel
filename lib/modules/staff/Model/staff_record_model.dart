@@ -1,15 +1,15 @@
 class StaffRecord {
   String? name;
   String? date;
-  String? branchName;
-  int? branchId;
+  String? LocationName;
+  int? LocationId;
   String? clockIn, rawClockIn;
   String? clockOut, rawClockOut;
   int? clockInRecordId, clockOutRecordId;
   String? totalHrsSpent, rawDate;
 
   StaffRecord(
-      {this.branchName,
+      {this.LocationName,
       this.clockIn,
       this.clockOut,
       this.date,
@@ -20,5 +20,5 @@ class StaffRecord {
       this.rawClockIn,
       this.rawClockOut,
       this.rawDate,
-      this.branchId});
+      this.LocationId});
 }

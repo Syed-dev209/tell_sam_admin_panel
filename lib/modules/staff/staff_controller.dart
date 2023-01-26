@@ -48,7 +48,7 @@ Future<bool> editStaff(
       "staff_pin": pin
     };
     var response = await DioService.post(APIS.editStaff, body: body);
-    Utils.showToast(response.data['message'], AlertType.success);
+    await Utils.showToast(response.data['message'], AlertType.success);
     return response.data['status'] == 1;
   } catch (e) {
     Utils.showToast(e.toString(), AlertType.error);
@@ -90,8 +90,8 @@ Future<List<StaffRecord>?> getStaffRecords(int staffId) async {
       staffRecords.add(
         StaffRecord(
             name: data.first["staff_name"],
-            branchName: data.first["location_name"],
-            branchId: data.first["location_id"],
+            LocationName: data.first["location_name"],
+            LocationId: data.first["location_id"],
             date: clockInDate,
             clockIn: Utils.formatTime(clockInDateTime),
             rawDate: rawDate,

@@ -9,21 +9,16 @@ class StaffModel {
 
   int? staffId;
   int? staffLocId;
-  String? staffName, pin, branchName;
+  String? staffName, pin, LocationName;
   bool isEditMode = false;
 
-  StaffModel({
-    this.staffId,
-    this.staffLocId,
-    this.staffName,
-    this.pin
-  });
+  StaffModel({this.staffId, this.staffLocId, this.staffName, this.pin});
   StaffModel.fromJson(Map<String, dynamic> json) {
     staffId = json['staff_id']?.toInt();
     staffLocId = json['staff_loc_id']?.toInt();
     staffName = json['staff_name']?.toString();
     pin = json['staff_pin']?.toString();
-    branchName = json['location_name'];
+    LocationName = json['location_name'];
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};

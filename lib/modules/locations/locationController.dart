@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:tell_sam_admin_panel/Utils/dio_service.dart';
 import 'package:tell_sam_admin_panel/Utils/utils.dart';
 import 'package:tell_sam_admin_panel/constants/network_constants.dart';
@@ -17,10 +18,10 @@ Future<List<LocationsModel>?> getAllLocations() async {
   }
 }
 
-Future<bool> addLocation(String branchName) async {
+Future<bool> addLocation(String LocationName) async {
   try {
     var response =
-        await DioService.post(APIS.addLocation, body: {"name": branchName});
+        await DioService.post(APIS.addLocation, body: {"name": LocationName});
     Utils.showToast(response.data['message'], AlertType.success);
     return response.data['status'] == 1;
   } catch (e) {
@@ -29,14 +30,16 @@ Future<bool> addLocation(String branchName) async {
   }
 }
 
-Future<bool> editLocation(int locationId, String locationName) async {
+Future<bool> editLocation(
+    int locationId, String locationName, BuildContext context) async {
   try {
     Map<String, dynamic> body = {
       "location_name": locationName,
       "location_id": locationId.toString()
     };
     var response = await DioService.post(APIS.editLocation, body: body);
-    Utils.showToast(response.data['message'], AlertType.success);
+    await Utils.showToast(response.data['message'], AlertType.success);
+
     return response.data['status'] == 1;
   } catch (e) {
     Utils.showToast(e.toString(), AlertType.error);

@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: Validators.requiredValidator,
                   prefix: const Icon(
                     Icons.person,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: Validators.requiredValidator,
                   prefix: const Icon(
                     Icons.lock,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                   obscureText: obscureText,
                   suffix: IconButton(
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       icon: Icon(
                         obscureText ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.black,
+                        color: Colors.white,
                       )),
                 ),
                 const SizedBox(

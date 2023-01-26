@@ -2,7 +2,7 @@ class LocationsModel {
 /*
 {
   "location_id": 1,
-  "location_name": "Branch 1"
+  "location_name": "Location 1"
 } 
 */
 

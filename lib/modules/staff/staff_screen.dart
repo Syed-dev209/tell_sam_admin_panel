@@ -128,7 +128,7 @@ class _StaffScreenState extends State<StaffScreen> {
                           columns: const [
                             DataColumn(label: Text('ID')),
                             DataColumn(label: Text('Name')),
-                            DataColumn(label: Text('Branch')),
+                            DataColumn(label: Text('Location')),
                             DataColumn(label: Text('Action')),
                           ],
                           rows: staffRows,
@@ -155,10 +155,16 @@ class _StaffScreenState extends State<StaffScreen> {
           cells: [
             DataCell(Text("${e.staffId}")),
             DataCell(Text("${e.staffName}")),
-            DataCell(Text("${e.branchName}")),
+            DataCell(Text("${e.LocationName}")),
             DataCell(staffAction(
-                onEdit: () => StaffEditPopup.show(context, e,allLocations).then((value) {
-                      if (value != null && value) refreshState();
+                onEdit: () async =>
+                    await StaffEditPopup.show(context, e, allLocations)
+                        .then((value) {
+                      if (value != null && value) {
+                        Future.delayed(Duration(seconds: 2), () {
+                          refreshState();
+                        });
+                      }
                     }),
                 onDelete: () => deleteStaffAction(e))),
           ]));

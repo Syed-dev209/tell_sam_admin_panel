@@ -74,7 +74,7 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                   columnSpacing: 20.0,
                   showCheckboxColumn: false,
                   columns: const [
-                    DataColumn(label: Text('Branch')),
+                    DataColumn(label: Text('Location')),
                     DataColumn(label: Text('Date')),
                     DataColumn(label: Text('Clock In')),
                     DataColumn(label: Text('Clock Out')),
@@ -82,7 +82,7 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                   ],
                   rows: snapshot.data!
                       .map<DataRow>((e) => DataRow(cells: [
-                            DataCell(Text("${e.branchName}")),
+                            DataCell(Text("${e.LocationName}")),
                             DataCell(Text("${e.date}")),
                             DataCell(GestureDetector(
                                 onTap: () => openEditTimeBottomSheet(
@@ -90,7 +90,7 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                                     e.rawClockIn,
                                     e.rawDate!,
                                     Entry.clockIn,
-                                    e.branchId!,
+                                    e.LocationId!,
                                     widget.staffId),
                                 child: Text("${e.clockIn}"))),
                             DataCell(GestureDetector(
@@ -99,7 +99,7 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                                     e.rawClockOut,
                                     e.rawDate!,
                                     Entry.clockOut,
-                                    e.branchId!,
+                                    e.LocationId!,
                                     widget.staffId),
                                 child: Text("${e.clockOut}"))),
                             DataCell(Text("${e.totalHrsSpent}"))

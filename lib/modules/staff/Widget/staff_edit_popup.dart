@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tell_sam_admin_panel/Utils/global_nav.dart';
 import 'package:tell_sam_admin_panel/Utils/validators.dart';
 import 'package:tell_sam_admin_panel/common/custom_text_field.dart';
 import 'package:tell_sam_admin_panel/common/location_drop_down.dart';
@@ -10,7 +9,7 @@ import 'package:tell_sam_admin_panel/modules/staff/Model/staff_model.dart';
 import 'package:tell_sam_admin_panel/modules/staff/staff_controller.dart';
 
 class StaffEditPopup {
-  static Future show(
+  static show(
     context,
     StaffModel staff,
     List<LocationsModel> allLocations,
@@ -20,9 +19,9 @@ class StaffEditPopup {
         TextEditingController(text: staff.staffId.toString());
     TextEditingController pin = TextEditingController(text: staff.pin);
     GlobalKey<FormState> key = GlobalKey<FormState>();
-    return await showDialog(
+    return showDialog(
         context: context,
-        builder: (context) {
+        builder: (context2) {
           bool buttonLoading = false;
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
@@ -75,12 +74,15 @@ class StaffEditPopup {
                             setState(() {
                               buttonLoading = true;
                             });
+                            Navigator.of(
+                              context,
+                              rootNavigator: true,
+                            ).pop(true);
                             bool check = await editStaff(
                                 staff.staffId!,
                                 name.text,
                                 int.parse(locationID.text),
                                 pin.text);
-                            Navigator.pop(context, check);
                           }
                         },
                         title: 'Update',

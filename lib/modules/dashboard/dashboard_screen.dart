@@ -20,12 +20,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Container(
             height: 80,
             width: 80,
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, border: Border.all()),
             child: Center(
               child: Image.asset(
                 'assets/logoShort.png',
-                height: 30,
+                height: 50,
               ),
             ),
           ),
@@ -41,7 +39,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
             icon: const Icon(Icons.dashboard)),
         DashboardItem(
-            label: 'Branches',
+            label: 'Locations',
             id: 'locations',
             builder: () {
               return const LocationsScreen();

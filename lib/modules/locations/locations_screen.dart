@@ -75,7 +75,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'All Branches',
+                        'All Locations',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -84,7 +84,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
                       PrimaryButton(
                         onTap: () => addLocationRow(allLocations, locationRows),
                         height: 44,
-                        title: '+ Add new Branch',
+                        title: '+ Add new Location',
                         width: size.width * 0.15,
                       )
                     ],
@@ -110,7 +110,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
                                 label: Text('ID'),
                               ),
                               DataColumn(
-                                label: Text('Branch Name'),
+                                label: Text('Location Name'),
                               ),
                               DataColumn(label: Text('Action'))
                             ],
@@ -136,7 +136,11 @@ class _LocationsScreenState extends State<LocationsScreen> {
         ),
         DataCell(getLocationActions(
             onEdit: () => LocationEdit.show(context, e).then((value) {
-                  if (value != null && value) refreshState();
+                  if (value != null && value) {
+                    Future.delayed(Duration(seconds: 2), () {
+                      refreshState();
+                    });
+                  }
                 }),
             onDelete: () => deleteaction(e)))
       ]));
@@ -170,8 +174,9 @@ class _LocationsScreenState extends State<LocationsScreen> {
     }
     allLocations.sort((a, b) => a.locationId!.compareTo(b.locationId!));
     int highest = allLocations.last.locationId! + 1;
-    String branchName = '';
-    locationRows.insert(0,
+    String LocationName = '';
+    locationRows.insert(
+      0,
       DataRow(
         cells: [
           DataCell(
@@ -179,13 +184,13 @@ class _LocationsScreenState extends State<LocationsScreen> {
           ),
           DataCell(TextField(
             onChanged: (value) {
-              branchName = value;
+              LocationName = value;
             },
           )),
           DataCell(Row(
             children: [
               TextButton(
-                onPressed: () => saveLocation(branchName),
+                onPressed: () => saveLocation(LocationName),
                 child: saveLoading
                     ? const Center(
                         child: CircularProgressIndicator(),
@@ -211,7 +216,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
 
   saveLocation(String name) async {
     if (name.isEmpty) {
-      Utils.showToast('Name is required',AlertType.warning);
+      Utils.showToast('Name is required', AlertType.warning);
       return;
     }
     setState(() {

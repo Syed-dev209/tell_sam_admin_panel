@@ -37,7 +37,7 @@ class _LocationDropDownState extends State<LocationDropDown> {
       width: widget.width,
       child: DropdownButtonFormField<LocationsModel>(
         value: selectedModel,
-        hint: const Text('Select Branch'),
+        hint: const Text('Select Location'),
         items: widget.locations
             .map((e) => DropdownMenuItem(
                   value: e,
@@ -54,7 +54,7 @@ class _LocationDropDownState extends State<LocationDropDown> {
             ? InputDecoration(
                 fillColor: Colors.black.withOpacity(0.05),
                 filled: true,
-                labelText: 'Branch',
+                labelText: 'Location',
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none),
