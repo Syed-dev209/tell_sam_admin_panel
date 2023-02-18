@@ -34,14 +34,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         DashboardItem(
             label: 'Staff',
             id: 'staff',
-            builder: () {
+            builder: (data) {
               return const StaffScreen();
             },
             icon: const Icon(Icons.dashboard)),
         DashboardItem(
             label: 'Locations',
             id: 'locations',
-            builder: () {
+            builder: (data) {
               return const LocationsScreen();
             },
             icon: const Icon(Icons.location_searching_sharp)),

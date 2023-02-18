@@ -17,40 +17,56 @@ class Utils {
         ).show(NavigationServices.navigationKey.currentContext!);
         break;
       case AlertType.warning:
-        MotionToast.warning(title: const Text("Warning"), description: Text(message))
+        MotionToast.warning(
+                title: const Text("Warning"), description: Text(message))
             .show(NavigationServices.navigationKey.currentContext!);
         break;
       case AlertType.error:
-        MotionToast.error(title: const Text("Error"), description: Text(message))
+        MotionToast.error(
+                title: const Text("Error"), description: Text(message))
             .show(NavigationServices.navigationKey.currentContext!);
         break;
     }
   }
 
-  static String formatDate(String dateTime) {
-    DateTime toParse = DateTime.parse(dateTime);
-    DateFormat format = DateFormat('dd MMM yy');
-    return format.format(toParse);
+  static String formatDate(String? dateTime) {
+    try {
+      if (dateTime == null) return '-';
+      DateTime toParse = DateTime.parse(dateTime);
+      DateFormat format = DateFormat('dd MMM yy');
+      return format.format(toParse);
+    } catch (e) {
+      return '-';
+    }
   }
 
-  static String formatTime(String dateTime) {
-    DateTime toParse = DateTime.parse(dateTime);
-    return DateFormat.Hm().format(toParse);
+  static String formatTime(String? dateTime) {
+    try {
+      if (dateTime == null) return '-';
+      DateTime toParse = DateTime.parse(dateTime);
+      return DateFormat.Hm().format(toParse);
+    } catch (e) {
+      return '-';
+    }
   }
 
   static String calculateHours(String clockIn, String clockOut) {
-    if (clockIn.isEmpty || clockOut.isEmpty) {
+    try {
+      if (clockIn.isEmpty || clockOut.isEmpty) {
+        return '-';
+      }
+      log("=============");
+      log(clockIn);
+      log(clockOut);
+      log("=============");
+
+      DateTime inTime = DateTime.parse(clockIn);
+      DateTime out = DateTime.parse(clockOut);
+      Duration sessionTime = out.difference(inTime);
+      return printDuration(sessionTime);
+    } catch (e) {
       return '-';
     }
-    log("=============");
-    log(clockIn);
-    log(clockOut);
-    log("=============");
-
-    DateTime inTime = DateTime.parse(clockIn);
-    DateTime out = DateTime.parse(clockOut);
-    Duration sessionTime = out.difference(inTime);
-    return printDuration(sessionTime);
   }
 }
 

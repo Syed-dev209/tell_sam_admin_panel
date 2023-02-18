@@ -64,57 +64,60 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                     child: Text('No Records found'),
                   );
                 }
-                return DataTable(
-                  headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => const Color.fromARGB(66, 35, 35, 35),
+                return SingleChildScrollView(
+                  child: DataTable(
+                    headingRowColor: MaterialStateColor.resolveWith(
+                      (states) => const Color.fromARGB(66, 35, 35, 35),
+                    ),
+                    headingRowHeight: 43.0,
+                    dataRowHeight: 50.0,
+                    dividerThickness: 0.0,
+                    columnSpacing: 20.0,
+                    showCheckboxColumn: false,
+                    columns: const [
+                      DataColumn(label: Text('Location')),
+                      DataColumn(label: Text('Date')),
+                      DataColumn(label: Text('Clock In')),
+                      DataColumn(label: Text('Clock Out')),
+                      DataColumn(label: Text('Total Hours')),
+                    ],
+                    rows: snapshot.data!
+                        .map<DataRow>((e) => DataRow(cells: [
+                              DataCell(Text("${e.LocationName}")),
+                              DataCell(Text("${e.date}")),
+                              DataCell(Tooltip(
+                                message: 'Edit clock in time',
+                                child: TextButton(
+                                    onPressed: () => openEditTimeBottomSheet(
+                                        e.clockInRecordId,
+                                        e.rawClockIn,
+                                        e.rawDate!,
+                                        Entry.clockIn,
+                                        e.LocationId!,
+                                        widget.staffId),
+                                    child: Text("${e.clockIn}",
+                                        style: TextStyle(color: Colors.white))),
+                              )),
+                              DataCell(Tooltip(
+                                message: 'Edit clock out time',
+                                child: TextButton(
+                                    onPressed: () => openEditTimeBottomSheet(
+                                        e.clockOutRecordId,
+                                        e.rawClockOut,
+                                        e.rawDate!,
+                                        Entry.clockOut,
+                                        e.LocationId!,
+                                        widget.staffId),
+                                    child: Text(
+                                      "${e.clockOut}",
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    )),
+                              )),
+                              DataCell(Text("${e.totalHrsSpent}"))
+                            ]))
+                        .toList(),
                   ),
-                  headingRowHeight: 43.0,
-                  dataRowHeight: 50.0,
-                  dividerThickness: 0.0,
-                  columnSpacing: 20.0,
-                  showCheckboxColumn: false,
-                  columns: const [
-                    DataColumn(label: Text('Location')),
-                    DataColumn(label: Text('Date')),
-                    DataColumn(label: Text('Clock In')),
-                    DataColumn(label: Text('Clock Out')),
-                    DataColumn(label: Text('Total Hours')),
-                  ],
-                  rows: snapshot.data!
-                      .map<DataRow>((e) => DataRow(cells: [
-                            DataCell(Text("${e.LocationName}")),
-                            DataCell(Text("${e.date}")),
-                            DataCell(Tooltip(
-                              message: 'Edit clock in time',
-                              child: TextButton(
-                                  onPressed: () => openEditTimeBottomSheet(
-                                      e.clockInRecordId,
-                                      e.rawClockIn,
-                                      e.rawDate!,
-                                      Entry.clockIn,
-                                      e.LocationId!,
-                                      widget.staffId),
-                                  child: Text("${e.clockIn}",
-                                      style: TextStyle(color: Colors.white))),
-                            )),
-                            DataCell(Tooltip(
-                              message: 'Edit clock out time',
-                              child: TextButton(
-                                  onPressed: () => openEditTimeBottomSheet(
-                                      e.clockOutRecordId,
-                                      e.rawClockOut,
-                                      e.rawDate!,
-                                      Entry.clockOut,
-                                      e.LocationId!,
-                                      widget.staffId),
-                                  child: Text(
-                                    "${e.clockOut}",
-                                    style: TextStyle(color: Colors.white),
-                                  )),
-                            )),
-                            DataCell(Text("${e.totalHrsSpent}"))
-                          ]))
-                      .toList(),
                 );
               })),
     );
