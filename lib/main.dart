@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tell_sam_admin_panel/Utils/global_nav.dart';
 import 'package:tell_sam_admin_panel/modules/login/login_screen.dart';
+import 'package:tell_sam_admin_panel/modules/staff/staff_screen.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
       ).copyWith(
           textTheme: GoogleFonts.poppinsTextTheme()
               .apply(bodyColor: Colors.white, displayColor: Colors.white)),
-      home: const LoginScreen(),
+      home: const StaffScreen()
+      //const LoginScreen(),
     );
   }
 }

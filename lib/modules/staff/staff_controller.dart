@@ -69,57 +69,54 @@ Future<bool> deleteStaff(int staffId) async {
 }
 
 Future<List<StaffRecord>?> getStaffRecords(int staffId) async {
-//  try {
-  var response =
-      await DioService.post(APIS.staffRecords, body: {"staff_id": staffId});
-  List data = response.data["data"];
-  List<StaffRecord> staffRecords = [];
-  List<List> chunksList = breakIntoTwoChunks(data);
-  log("CHUNKS===> $chunksList");
-  for (var chunk in chunksList) {
-    // if (index + 1 == data.length) {
-    //   index = index - 1;
-    // }
-    var clockInDetails = chunk.first;
-    var clockOutDetails = chunk.last;
-    String? date =
-        (clockInDetails == null || clockInDetails['record_timestamp'] == 'null')
-            ? clockOutDetails != null &&
-                    clockOutDetails['record_timestamp'] != 'null'
-                ? clockOutDetails['record_timestamp']
-                : null
-            : clockInDetails['record_timestamp'];
-    if (clockInDetails != null) {
-      staffRecords.add(StaffRecord(
-          name: data.first["staff_name"],
-          LocationName: data.first["location_name"],
-          LocationId: data.first["location_id"],
-          date: Utils.formatDate(date),
-          rawDate: date?.substring(0, 10),
-          clockIn: Utils.formatTime(clockInDetails['record_timestamp']),
-          rawClockIn: clockInDetails['record_timestamp'],
-          clockInRecordId: clockInDetails["record_id"],
-          clockOutRecordId:
-              clockOutDetails != null ? clockOutDetails["record_id"] : null,
-          clockOut: clockOutDetails != null
-              ? Utils.formatTime(clockOutDetails["record_timestamp"])
-              : '-',
-          rawClockOut: clockOutDetails != null
-              ? clockOutDetails["record_timestamp"]
-              : null,
-          totalHrsSpent: Utils.calculateHours(
-              clockInDetails['record_timestamp'] ?? '',
-              clockOutDetails != null
-                  ? clockOutDetails["record_timestamp"]
-                  : '')));
+  try {
+    var response =
+        await DioService.post(APIS.staffRecords, body: {"staff_id": staffId});
+    List data = response.data["data"];
+    List<StaffRecord> staffRecords = [];
+    List<List> chunksList = breakIntoTwoChunks(data);
+    log("CHUNKS===> $chunksList");
+    for (var chunk in chunksList) {
+      var clockInDetails = chunk.first;
+      var clockOutDetails = chunk.last;
+      String? date = (clockInDetails == null ||
+              clockInDetails['record_timestamp'] == 'null')
+          ? clockOutDetails != null &&
+                  clockOutDetails['record_timestamp'] != 'null'
+              ? clockOutDetails['record_timestamp']
+              : null
+          : clockInDetails['record_timestamp'];
+      if (clockInDetails != null) {
+        staffRecords.add(StaffRecord(
+            name: data.first["staff_name"],
+            LocationName: data.first["location_name"],
+            LocationId: data.first["location_id"],
+            date: Utils.formatDate(date),
+            rawDate: date?.substring(0, 10),
+            clockIn: Utils.formatTime(clockInDetails['record_timestamp']),
+            rawClockIn: clockInDetails['record_timestamp'],
+            clockInRecordId: clockInDetails["record_id"],
+            clockOutRecordId:
+                clockOutDetails != null ? clockOutDetails["record_id"] : null,
+            clockOut: clockOutDetails != null
+                ? Utils.formatTime(clockOutDetails["record_timestamp"])
+                : '-',
+            rawClockOut: clockOutDetails != null
+                ? clockOutDetails["record_timestamp"]
+                : null,
+            totalHrsSpent: Utils.calculateHours(
+                clockInDetails['record_timestamp'] ?? '',
+                clockOutDetails != null
+                    ? clockOutDetails["record_timestamp"]
+                    : '')));
+      }
     }
+    return staffRecords;
+  } catch (e) {
+    log(e.toString());
+    Utils.showToast(e.toString(), AlertType.error);
+    return null;
   }
-  return staffRecords;
-  // } catch (e) {
-  //   log(e.toString());
-  //   Utils.showToast(e.toString(), AlertType.error);
-  //   return null;
-  // }
 }
 
 List<List> breakIntoTwoChunks(List items) {

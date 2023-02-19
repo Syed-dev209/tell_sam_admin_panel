@@ -7,12 +7,14 @@ class LocationDropDown extends StatefulWidget {
   final int? selectedLocation;
   final double? width;
   final bool showDecoration;
+  final bool showLabel;
   const LocationDropDown(
       {super.key,
       required this.locations,
       required this.onChange,
       this.width,
       this.selectedLocation,
+      this.showLabel = true,
       this.showDecoration = false});
 
   @override
@@ -54,7 +56,8 @@ class _LocationDropDownState extends State<LocationDropDown> {
             ? InputDecoration(
                 fillColor: Colors.black.withOpacity(0.05),
                 filled: true,
-                labelText: 'Location',
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                labelText: widget.showLabel ? 'Location' : null,
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none),
