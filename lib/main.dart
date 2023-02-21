@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tell_sam_admin_panel/Utils/global_nav.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.light,
+        
       ).copyWith(textTheme: GoogleFonts.poppinsTextTheme()),
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
@@ -35,6 +37,14 @@ class MyApp extends StatelessWidget {
       ).copyWith(
           textTheme: GoogleFonts.poppinsTextTheme()
               .apply(bodyColor: Colors.white, displayColor: Colors.white)),
+              scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.stylus,
+          PointerDeviceKind.unknown
+        },
+      ),
       // home: const StaffScreen()
      home: const LoginScreen(),
     );

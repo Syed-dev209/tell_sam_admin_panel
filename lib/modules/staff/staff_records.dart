@@ -90,16 +90,6 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Total Hours: ${calculateTotalHours(snapshot.data!)}",
-                      style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
                     Container(
                         height: 48,
                         width: 140,
@@ -131,6 +121,19 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                     FilterWidget(
                       allLocations: allLocations,
                       onFilterApplied: applyFilter,
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Text(
+                      "Total Hours: ${calculateTotalHours(snapshot.data!)}",
+                      style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white),
+                    ),
+                    const SizedBox(
+                      height: 12,
                     ),
                     snapshot.data!.isNotEmpty
                         ? Expanded(
