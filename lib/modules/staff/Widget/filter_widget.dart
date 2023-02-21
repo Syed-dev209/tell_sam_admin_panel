@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tell_sam_admin_panel/Utils/utils.dart';
 import 'package:tell_sam_admin_panel/common/location_drop_down.dart';
-import 'package:tell_sam_admin_panel/common/primary_button.dart';
 import 'package:tell_sam_admin_panel/modules/locations/Model/location_model.dart';
 
 class FilterWidget extends StatefulWidget {
@@ -19,7 +19,13 @@ class _FilterWidgetState extends State<FilterWidget> {
   double datePickerHeight = 0;
   DateTime? startDate;
   DateTime? endDate;
-  List<String> dateFilters = ['Today', 'Yesterday', 'This month', 'Past Month'];
+  List<String> dateFilters = [
+    'Custom',
+    'Today',
+    'Yesterday',
+    'This month',
+    'Past Month'
+  ];
   String? selectedFilter;
   LocationsModel? selectedLocation;
   @override
@@ -38,8 +44,10 @@ class _FilterWidgetState extends State<FilterWidget> {
                   locations: widget.allLocations,
                   showDecoration: true,
                   showLabel: false,
-                  onChange: (model) =>
-                      setState(() => selectedLocation = model))),
+                  onChange: (model) {
+                    setState(() => selectedLocation = model);
+                    applyFilters();
+                  })),
           const SizedBox(
             width: 12,
           ),
@@ -58,7 +66,10 @@ class _FilterWidgetState extends State<FilterWidget> {
                       .map<DropdownMenuItem<String>>(
                           (e) => DropdownMenuItem(value: e, child: Text(e)))
                       .toList(),
-                  onChanged: (value) => setState(() => selectedFilter = value),
+                  onChanged: (value) {
+                    setState(() => selectedFilter = value);
+                    onDateFilterApplied(value!);
+                  },
                   borderRadius: BorderRadius.circular(8),
                   isDense: true,
                 ),
@@ -67,20 +78,49 @@ class _FilterWidgetState extends State<FilterWidget> {
             width: 12,
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                selectedFilter = null;
+                selectedLocation = null;
+              });
+              widget.onFilterApplied(null, null, null);
+            },
             icon: const Icon(Icons.restore),
-            tooltip: 'Reset Filters',
+          tooltip: 'Reset Filters'
           ),
-          const SizedBox(
-            width: 12,
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.add_task),
-            tooltip: 'Apply Filters',
-          )
         ],
       ),
     );
+  }
+
+  onDateFilterApplied(String filterType) {
+    if (filterType == 'Custom') {
+      openDateRangePicker();
+    } else {
+      Map<String, DateTime> range = Utils.getDateRange(filterType);
+      startDate = range['start'];
+      endDate = range['end'];
+      setState(() {});
+      applyFilters();
+    }
+  }
+
+  applyFilters() {
+    widget.onFilterApplied(startDate, endDate, selectedLocation);
+  }
+
+  openDateRangePicker() async {
+    DateTime now = DateTime.now();
+    DateTimeRange? ranges = await showDateRangePicker(
+        context: context,
+        firstDate: DateTime(now.year - 1, now.month, now.day),
+        lastDate: DateTime(now.year, 12, now.day),
+        currentDate: now);
+
+    if (ranges != null) {
+      startDate = ranges.start;
+      endDate = ranges.end;
+      applyFilters();
+    }
   }
 }

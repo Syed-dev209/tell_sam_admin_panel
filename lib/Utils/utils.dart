@@ -68,6 +68,39 @@ class Utils {
       return '-';
     }
   }
+
+  static Map<String, DateTime> getDateRange(String filterType) {
+    Map<String, DateTime> range = {};
+    DateTime now = DateTime.now();
+    DateTime currentDate = now.subtract(Duration(
+        hours: now.hour,
+        minutes: now.minute,
+        seconds: now.second,
+        milliseconds: now.millisecond,
+        microseconds: now.microsecond));
+
+    if (filterType == 'Today') {
+      range['start'] = currentDate;
+      range['end'] =
+          currentDate.add(const Duration(minutes: 59, hours: 23, seconds: 59));
+    } else if (filterType == 'Yesterday') {
+      DateTime yesterday = currentDate.subtract(const Duration(days: 1));
+      range['start'] = (yesterday);
+      range['end'] =
+          (yesterday.add(const Duration(minutes: 59, hours: 23, seconds: 59)));
+    } else if (filterType == 'This month') {
+      range['start'] =
+          (DateTime(currentDate.year, currentDate.month, 1, 0, 0, 0));
+      range['end'] =
+          (DateTime(currentDate.year, currentDate.month + 1, 23, 59, 0, 0));
+    } else if (filterType == 'Past Month') {
+      range['start'] =
+          (DateTime(currentDate.year, currentDate.month - 1, 1, 0, 0, 0));
+      range['end'] =
+          (DateTime(currentDate.year, currentDate.month, 0, 23, 59, 0, 0));
+    }
+    return range;
+  }
 }
 
 String printDuration(Duration duration) {
