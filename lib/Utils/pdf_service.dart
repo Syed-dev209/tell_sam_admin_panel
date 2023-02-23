@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
+import 'package:tell_sam_admin_panel/modules/locations/Model/location_report_model.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Model/staff_record_model.dart';
 import 'dart:html' as html;
 
@@ -12,9 +13,9 @@ class PdfService {
   init() async {
     imageLogo = MemoryImage(
         (await rootBundle.load('assets/logo.png')).buffer.asUint8List());
-    ByteData data = await rootBundle.load("assets/Roboto-Medium.ttf");
+    ByteData data = await rootBundle.load("assets/Roboto-Regular.ttf");
     myFont = Font.ttf(data);
-    style = TextStyle(font: myFont);
+    style = TextStyle(font: myFont, fontSize: 12);
   }
 
   makePdf(context, String staffName, int totalHrs,
@@ -58,6 +59,40 @@ class PdfService {
     anchor.click();
   }
 
+  makePdfForLocationData(context, List<LocationReportData> data, String locationName)async {
+       final pdf = Document();
+    pdf.addPage(Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) {
+          return Column(children: [
+            _getHeaderForLocation(locationName),
+            Table(border: TableBorder.all(color: PdfColors.black), children: [
+              TableRow(children: [
+                _paddedText('Name'),
+                _paddedText('Total Hours'),
+              ]),
+              ...data
+                  .map<TableRow>((e) => TableRow(children: [
+                        _paddedText('${e.staffName}'),
+                        _paddedText('${e.totalHours}'),
+                      ]))
+                  .toList()
+            ])
+          ]);
+        }));
+
+    Uint8List pdfInBytes = await pdf.save();
+
+    final blob = html.Blob([pdfInBytes], 'application/pdf');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = '$locationName.pdf';
+    html.document.body?.children.add(anchor);
+    anchor.click();
+  }
+
   _getHeader(String staffName, int hours) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,6 +102,25 @@ class PdfService {
           children: [
             Text("Staff name: $staffName", style: style),
             Text("Total Hours worked: $hours", style: style),
+          ],
+        ),
+        SizedBox(
+          height: 150,
+          width: 150,
+          child: Image(imageLogo),
+        )
+      ],
+    );
+  }
+
+    _getHeaderForLocation(String locationName) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Location: $locationName", style: style),
           ],
         ),
         SizedBox(

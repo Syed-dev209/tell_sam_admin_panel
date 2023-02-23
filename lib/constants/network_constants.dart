@@ -21,4 +21,5 @@ class APIS {
   static const String deleteLocation = 'location/delete';
 
   static const String clock = 'admin/record/add';
+  static const String locationReports = 'reports';
 }

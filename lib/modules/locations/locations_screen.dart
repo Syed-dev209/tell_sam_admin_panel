@@ -7,6 +7,7 @@ import 'package:tell_sam_admin_panel/common/primary_button.dart';
 import 'package:tell_sam_admin_panel/modules/locations/Model/location_model.dart';
 import 'package:tell_sam_admin_panel/modules/locations/Widget/location_edit_popup.dart';
 import 'package:tell_sam_admin_panel/modules/locations/locationController.dart';
+import 'package:tell_sam_admin_panel/modules/locations/reports_popup.dart';
 
 class LocationsScreen extends StatefulWidget {
   const LocationsScreen({super.key});
@@ -66,8 +67,9 @@ class _LocationsScreenState extends State<LocationsScreen> {
               }
               allLocations = [...snapshot.data!];
               if (!addingNew) {
+                locationRows.clear();
                 getLocationRow(allLocations, locationRows);
-              }
+              } else {}
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -127,23 +129,28 @@ class _LocationsScreenState extends State<LocationsScreen> {
 
   getLocationRow(List<LocationsModel> locations, List<DataRow> locationRows) {
     for (var e in locations) {
-      locationRows.add(DataRow(cells: [
-        DataCell(
-          Text("${e.locationId}"),
-        ),
-        DataCell(
-          Text("${e.locationName}"),
-        ),
-        DataCell(getLocationActions(
-            onEdit: () => LocationEdit.show(context, e).then((value) {
-                  if (value != null && value) {
-                    Future.delayed(Duration(seconds: 2), () {
-                      refreshState();
-                    });
-                  }
-                }),
-            onDelete: () => deleteaction(e)))
-      ]));
+      locationRows.add(DataRow(
+          onSelectChanged: (value) {
+            showLocationReportPopup(context, e.locationId!, e.locationName!)
+                .then((value) => locationRows.clear());
+          },
+          cells: [
+            DataCell(
+              Text("${e.locationId}"),
+            ),
+            DataCell(
+              Text("${e.locationName}"),
+            ),
+            DataCell(getLocationActions(
+                onEdit: () => LocationEdit.show(context, e).then((value) {
+                      if (value != null && value) {
+                        Future.delayed(const Duration(seconds: 2), () {
+                          refreshState();
+                        });
+                      }
+                    }),
+                onDelete: () => deleteaction(e)))
+          ]));
     }
   }
 
