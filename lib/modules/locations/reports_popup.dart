@@ -142,15 +142,20 @@ class _LocationsReportPopupState extends State<LocationsReportPopup> {
   getLocationReportsData() async {
     setState(() {
       isLoading = true;
+      error = '';
     });
     List<LocationReportData>? data = await getReportData(
         widget.locationId, startDate!.toString(), endDate!.toString());
     setState(() {
       isLoading = false;
     });
-    if (data != null) {
+    if (data != null && data.isNotEmpty) {
       await exportReport(selectedExportOption!, data);
       Navigator.pop(context);
+    } else {
+      setState(() {
+        error = 'No records found.';
+      });
     }
   }
 
@@ -167,7 +172,8 @@ class _LocationsReportPopupState extends State<LocationsReportPopup> {
   }
 }
 
-Future showLocationReportPopup(context, int locationId, String locationName) async {
+Future showLocationReportPopup(
+    context, int locationId, String locationName) async {
   await showDialog(
       context: context,
       builder: (context) => LocationsReportPopup(

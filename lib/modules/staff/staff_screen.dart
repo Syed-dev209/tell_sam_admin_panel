@@ -80,13 +80,15 @@ class _StaffScreenState extends State<StaffScreen> {
                   child: CircularProgressIndicator(),
                 );
               }
-              if (snapshot.data == null || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('No staff members found'),
-                );
+              if (!(snapshot.data == null || snapshot.data!.isEmpty)) {
+                allStaff = [...snapshot.data!];
+                // return const Center(
+                //   child: Text('No staff members found'),
+                // );
               }
-              allStaff = [...snapshot.data!];
+
               if (!isAddingNew) {
+                staffRows.clear();
                 getStaffRows(allStaff, staffRows);
               }
               return Column(
@@ -195,8 +197,11 @@ class _StaffScreenState extends State<StaffScreen> {
     if (isAddingNew) {
       return;
     }
-    allStaff.sort((a, b) => a.staffId!.compareTo(b.staffId!));
-    int highest = allStaff.last.staffId! + 1;
+    int highest = 1;
+    if (allStaff != null && allStaff.isNotEmpty) {
+      allStaff.sort((a, b) => a.staffId!.compareTo(b.staffId!));
+      highest = allStaff.last.staffId! + 1;
+    }
     String memberName = '';
     String locationId = '';
     String pin = '';

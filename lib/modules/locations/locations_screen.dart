@@ -60,12 +60,13 @@ class _LocationsScreenState extends State<LocationsScreen> {
                   child: CircularProgressIndicator(),
                 );
               }
-              if (snapshot.data == null || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('No Locations found'),
-                );
+              if (!(snapshot.data == null || snapshot.data!.isEmpty)) {
+                allLocations = [...snapshot.data!];
+                // return const Center(
+                //   child: Text('No Locations found'),
+                // );
               }
-              allLocations = [...snapshot.data!];
+
               if (!addingNew) {
                 locationRows.clear();
                 getLocationRow(allLocations, locationRows);
@@ -179,8 +180,11 @@ class _LocationsScreenState extends State<LocationsScreen> {
     if (addingNew) {
       return true;
     }
-    allLocations.sort((a, b) => a.locationId!.compareTo(b.locationId!));
-    int highest = allLocations.last.locationId! + 1;
+    int highest = 1;
+    if (allLocations != null && allLocations.isNotEmpty) {
+      allLocations.sort((a, b) => a.locationId!.compareTo(b.locationId!));
+      highest = allLocations.last.locationId! + 1;
+    }
     String LocationName = '';
     locationRows.insert(
       0,
