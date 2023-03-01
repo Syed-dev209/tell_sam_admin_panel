@@ -19,22 +19,32 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
   late DateTime selectedDateTime;
 
   pickTime() async {
-    var pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(
-          hour: selectedDateTime.hour, minute: selectedDateTime.minute),
-    );
-    print(pickedTime);
-    if (pickedTime != null) {
-      selectedDateTime = DateTime(
-        selectedDateTime.year,
-        selectedDateTime.month,
-        selectedDateTime.day,
-        pickedTime.hour,
-        pickedTime.minute,
+    var pickedDate = await showDatePicker(
+        context: context,
+        initialDate: selectedDateTime,
+        firstDate: DateTime(2021, 1, 1),
+        lastDate: DateTime(2050, 1, 1));
+    var pickedTime;
+    if (pickedDate != null) {
+      // ignore: use_build_context_synchronously
+      pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay(
+            hour: selectedDateTime.hour, minute: selectedDateTime.minute),
       );
-      setState(() {});
-      widget.onDateChange(selectedDateTime);
+
+      print(pickedTime);
+      if (pickedTime != null) {
+        selectedDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        setState(() {});
+        widget.onDateChange(selectedDateTime);
+      }
     }
   }
 
@@ -65,7 +75,7 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(Utils.formatTime(selectedDateTime.toString())),
+                Text(Utils.formatDateTime(selectedDateTime.toString())),
                 const SizedBox(
                   width: 16,
                 ),

@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tell_sam_admin_panel/Utils/global_nav.dart';
+import 'package:tell_sam_admin_panel/modules/dashboard/dashboard_screen.dart';
 import 'package:tell_sam_admin_panel/modules/locations/locations_screen.dart';
 import 'package:tell_sam_admin_panel/modules/login/login_screen.dart';
 import 'package:tell_sam_admin_panel/modules/staff/staff_screen.dart';
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
             PointerDeviceKind.unknown
           },
         ),
-        // home: const LocationsScreen()
+        // home: const DashboardScreen()
          home: const LoginScreen(),
         );
   }

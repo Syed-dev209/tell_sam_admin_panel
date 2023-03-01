@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:tell_sam_admin_panel/Utils/dio_service.dart';
 import 'package:tell_sam_admin_panel/Utils/utils.dart';
 import 'package:tell_sam_admin_panel/constants/network_constants.dart';
+import 'package:tell_sam_admin_panel/modules/locations/Model/location_report_model.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Model/staff_model.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Model/staff_record_model.dart';
 
@@ -65,6 +66,25 @@ Future<bool> deleteStaff(int staffId) async {
   } catch (e) {
     Utils.showToast(e.toString(), AlertType.error);
     return false;
+  }
+}
+
+Future<List<LocationReportData>?> getAllStaffRecords(
+    DateTime startDate, DateTime endDate) async {
+  try {
+    Map<String, dynamic> body = {
+      "start": startDate.toString(),
+      "end": endDate.toString()
+    };
+    var response = await DioService.post(APIS.allStaffRecords, body: body);
+    List<LocationReportData> data = [];
+    for (var i in response.data["data"]) {
+      data.add(LocationReportData.fromJson(i));
+    }
+    return data;
+  } catch (e) {
+    Utils.showToast(e.toString(), AlertType.error);
+    return null;
   }
 }
 

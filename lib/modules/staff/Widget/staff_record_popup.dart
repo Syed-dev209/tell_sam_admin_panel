@@ -1,25 +1,33 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:tell_sam_admin_panel/Utils/global_nav.dart';
 import 'package:tell_sam_admin_panel/common/primary_button.dart';
 import 'package:tell_sam_admin_panel/modules/staff/Widget/custom_time_picker.dart';
 import 'package:tell_sam_admin_panel/modules/staff/staff_controller.dart';
 
 class StaffRecordPopup {
-  static Future show(context, int? recordId, String? dateTime, String rawDate,
-      int locationId, Entry type, int staffId) async {
-    return await showDialog(
+  static Future<bool?> show(context, int? recordId, String? dateTime,
+      String rawDate, int locationId, Entry type, int staffId) async {
+    bool check = await showDialog(
         context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return EditStaffPopupBody(
-              recordId: recordId,
-              dateTime: dateTime,
-              rawDate: rawDate,
-              staffId: staffId,
-              locationId: locationId,
-              type: type,
-            );
-          });
+        builder: (context2) {
+          return EditStaffPopupBody(
+            recordId: recordId,
+            dateTime: dateTime,
+            rawDate: rawDate,
+            staffId: staffId,
+            locationId: locationId,
+            type: type,
+            pop: (value) {
+              log("pop caled");
+              Navigator.pop(context2);
+              Navigator.pop(context2, value);
+            },
+          );
         });
+    print(check);
+    return check;
   }
 }
 
@@ -30,6 +38,7 @@ class EditStaffPopupBody extends StatefulWidget {
   final int locationId;
   final Entry type;
   final int staffId;
+  final Function(bool value) pop;
   const EditStaffPopupBody(
       {super.key,
       required this.dateTime,
@@ -37,7 +46,8 @@ class EditStaffPopupBody extends StatefulWidget {
       required this.recordId,
       required this.locationId,
       required this.staffId,
-      required this.type});
+      required this.type,
+      required this.pop});
 
   @override
   State<EditStaffPopupBody> createState() => _EditStaffPopupBodyState();
@@ -59,7 +69,9 @@ class _EditStaffPopupBodyState extends State<EditStaffPopupBody> {
         child: Column(
           children: [
             CustomTimePicker(
-                initialDate: widget.dateTime != null
+                initialDate: widget.dateTime != null &&
+                        widget.dateTime != '-' &&
+                        widget.dateTime != "null"
                     ? DateTime.parse(widget.dateTime!)
                     : DateTime.parse(widget.rawDate),
                 onDateChange: (newTime) {
@@ -89,13 +101,7 @@ class _EditStaffPopupBodyState extends State<EditStaffPopupBody> {
     setState(() {
       buttonLoading = false;
     });
-    pop(check);
-  }
-
-  pop(bool result) {
-    print('pop called');
-    Navigator.pop(context, result);
-    Navigator.pop(context, result);
+    widget.pop(check);
   }
 
   addNewRecord() async {
@@ -108,6 +114,6 @@ class _EditStaffPopupBodyState extends State<EditStaffPopupBody> {
     setState(() {
       buttonLoading = false;
     });
-    pop(check);
+    widget.pop(check);
   }
 }

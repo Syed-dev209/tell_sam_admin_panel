@@ -50,6 +50,17 @@ class Utils {
     }
   }
 
+  static String formatDateTime(String? dateTime) {
+    try {
+      if (dateTime == null) return '-';
+      DateTime toParse = DateTime.parse(dateTime);
+      DateFormat format = DateFormat('dd MMM yy hh:mm');
+      return format.format(toParse);
+    } catch (e) {
+      return '-';
+    }
+  }
+
   static String calculateHours(String clockIn, String clockOut) {
     try {
       if (clockIn.isEmpty || clockOut.isEmpty) {

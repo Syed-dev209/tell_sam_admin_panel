@@ -141,11 +141,11 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
                               child: SizedBox(
                                 width: double.maxFinite,
                                 child: DataTable(
-                                  headingRowColor:
-                                      MaterialStateColor.resolveWith(
-                                    (states) =>
-                                        const Color.fromARGB(66, 35, 35, 35),
-                                  ),
+                                    headingRowColor:
+                                        MaterialStateColor.resolveWith(
+                                      (states) =>
+                                          const Color.fromARGB(66, 35, 35, 35),
+                                    ),
                                   headingRowHeight: 43.0,
                                   dataRowHeight: 50.0,
                                   dividerThickness: 0.0,

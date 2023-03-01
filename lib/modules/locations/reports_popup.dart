@@ -114,9 +114,9 @@ class _LocationsReportPopupState extends State<LocationsReportPopup> {
     );
   }
 
-  onDateFilterApplied(String filterType) {
+  onDateFilterApplied(String filterType)async {
     if (filterType == 'Custom') {
-      openDateRangePicker();
+      await openDateRangePicker();
     } else {
       Map<String, DateTime> range = Utils.getDateRange(filterType);
       startDate = range['start'];

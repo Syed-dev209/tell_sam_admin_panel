@@ -11,6 +11,7 @@ class APIS {
   static const String addStaff = 'staff/add';
   static const String editStaff = 'staff/edit';
   static const String deleteStaff = 'staff/delete';
+  static const String allStaffRecords = 'staff/reports';
 
   static const String staffRecords = 'admin/staff/records';
   static const String editStaffRecord = 'admin/staff/record/edit';

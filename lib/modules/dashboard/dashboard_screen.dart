@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ready/ready.dart';
+import 'package:tell_sam_admin_panel/modules/allRecords/all_records.dart';
 import 'package:tell_sam_admin_panel/modules/locations/locations_screen.dart';
 import 'package:tell_sam_admin_panel/modules/staff/staff_screen.dart';
 
@@ -45,6 +46,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return const LocationsScreen();
             },
             icon: const Icon(Icons.location_searching_sharp)),
+            DashboardItem(
+            label: 'All Staff Records',
+            id: 'allRecords',
+            builder: (data) {
+              return const AllRecords();
+            },
+            icon: const Icon(Icons.poll_outlined)),
       ],
     );
   }
