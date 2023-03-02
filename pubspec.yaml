@@ -45,6 +45,8 @@ dependencies:
   excel: ^2.0.1
   pdf: ^3.9.0
   printing: ^5.10.1
+  cloud_firestore: ^4.4.3
+  firebase_core: ^2.7.0
 
 dev_dependencies:
   flutter_test:

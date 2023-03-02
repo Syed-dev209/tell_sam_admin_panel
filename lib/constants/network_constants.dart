@@ -6,6 +6,7 @@ class APIS {
   };
   static const String baseUrl = 'https://www.codewithmemes.com/';
   static const String login = 'admin/login';
+  static const String changePassword = 'admin/password';
 
   static const String allStaff = 'staffs';
   static const String addStaff = 'staff/add';

@@ -8,10 +8,13 @@ class ExcelService {
   late Excel excel;
   late Sheet sheet;
 
-  init() {
+  init(int totalHrsWorked) {
     excel =
         Excel.createExcel(); //create empty 1 emptyb sheet name as : "Sheet1"
     sheet = excel['Sheet1'];
+    List<String> staffDetails = ['Name', staffName];
+    List<String> totalHrsDetail = ['Total Hrs', totalHrsWorked.toString()];
+
     List<String> columnName = [
       'Location',
       'Date',
@@ -19,7 +22,10 @@ class ExcelService {
       'Clock Out',
       'Total Hours'
     ];
-    sheet.insertRowIterables(columnName, 0);
+     sheet.insertRowIterables(staffDetails, 0);
+     sheet.insertRowIterables(totalHrsDetail, 1);
+    sheet.insertRowIterables(columnName, 2);
+   
   }
 
   initForLocationData() {
@@ -43,7 +49,7 @@ class ExcelService {
         e.clockOut,
         e.totalHrsSpent
       ];
-      sheet.insertRowIterables(data, i + 1);
+      sheet.insertRowIterables(data, i + 3);
     }
 
     var fileBytes = excel.save(fileName: "$staffName.xlsx");

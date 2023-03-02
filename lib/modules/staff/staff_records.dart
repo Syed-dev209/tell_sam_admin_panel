@@ -278,7 +278,7 @@ class _StaffRecordsScreenState extends State<StaffRecordsScreen> {
   exportReport(String type, List<StaffRecord> records, int totalHrs) async {
     if (type == 'Excel') {
       ExcelService service = ExcelService(widget.name);
-      service.init();
+      service.init(totalHrs);
       service.createAndSave(records);
     } else {
       PdfService service = PdfService();
