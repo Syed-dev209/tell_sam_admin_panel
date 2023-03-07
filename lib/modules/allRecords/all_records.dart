@@ -42,23 +42,13 @@ class _AllRecordsState extends State<AllRecords> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: const Text(
-            "All Staff Records",
-          ),
-          centerTitle: false,
-        ),
-      ),
       body: Container(
         height: size.height,
         width: size.width,
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            SizedBox(height: 20),
             SizedBox(
               height: 56,
               child: Row(
@@ -85,6 +75,7 @@ class _AllRecordsState extends State<AllRecords> {
                 ],
               ),
             ),
+            SizedBox(height: 20),
             StreamBuilder<List<LocationReportData>?>(
               stream: controller.stream,
               builder: (context, snapshot) {
